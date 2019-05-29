@@ -1,37 +1,29 @@
 $(document).ready(function () {
+    $("button").on("click", function (e) {
+        e.preventDefault();
 
-    // var citySearch = [""];
-    // var city = [""];
+        // Clearing out table each time Submit is hit
+        $(".table > tbody:last").children().remove();
+        $(".no-results").empty();
 
-    breweryQuery = function (city) {
-        var queryURL = "https://api.openbrewerydb.org/breweries?by_city="
-        + city
-        console.log(queryURL);
-        
-        
-        
+        // Call to openbrewerydb API
+        var queryURL = "https://api.openbrewerydb.org/breweries?by_city=";
         $.ajax({
-            method: "GET",
-            url: queryURL,
-        }).then(function(result) {
-            console.log(result);
-        });
-    }
-            // var city = result.city;
+            url: queryURL + $(".search-index").val().trim(),
+            method: "GET"
+        }).then(function (response) {
 
-            // city.attr("src", url);
-            // // for loop for more images
-            // $(".gifs").append(gif);
-            breweryQuery("Minneapolis");
-        });
-        // console.log(city);
+            // Adding logic to return no results if there are no breweries in city searched for
+            if (response.length === 0) {
+                $(".no-results").text("No Results")
+            }
 
-        $("#city-input-btn").on("click", function(event) {
-            event.preventDefault();
-            // This line grabs the input from the textbox
-            var city= $("#city-input").val().trim();
-            console.log(city);
-            // Adding movie from the textbox to our array
-            // Calling renderButtons which handles the processing of our movie array
-            displayBreweryInfo(city);
-          });
+            // create a new row for each brewery object returned by api + append to table
+            response.forEach(brewery => {
+                var row = "<tr><td>" + brewery.city + "</td><td>" + brewery.state + "</td><td>" + brewery.name + "</td></tr>";
+
+                $('.table').append(row);
+            })
+        });
+    });
+});
