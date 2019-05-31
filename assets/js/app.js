@@ -16,14 +16,37 @@ $(document).ready(function () {
             // Adding logic to return no results if there are no breweries in city searched for
             if (response.length === 0) {
                 $(".no-results").text("No Results")
+            } else {
+                displayBreweryInfo(response);
             }
 
             // create a new row for each brewery object returned by api + append to table
-            response.forEach(brewery => {
-                var row = "<tr><td>" + brewery.city + "</td><td>" + brewery.state + "</td><td>" + brewery.name + "</td></tr>";
+            function displayBreweryInfo (response){
 
-                $('.table').append(row);
-            })
+                for (var i =0; i<9; i++) {
+            
+                var brewery = response[i].name; 
+                var street = response[i].street;
+                var zip = response[i].postal_code; 
+                var state = response[i].state;
+                var address = street+", "+state+", "+zip; 
+                var number = response[i].phone;
+                var website = response[i].website_url; 
+            
+                var newRow = $("<tr>").append(
+                $("<td>").text(brewery),
+                $("<td>").text(address),
+                $("<td>").text(number),
+                $("<td>").html('<a href="'+website+'">'+website+'</a>'),
+                
+              );
+            
+              // Append the new row to the table
+              $(".table > tbody").append(newRow);
+            
+            
+                }
+            }
         });
     });
 });
