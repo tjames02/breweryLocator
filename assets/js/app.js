@@ -1,11 +1,10 @@
 $(document).ready(function () {
 
+    $("#map-row").hide();
 
     $("button").on("click", function (e) {
         e.preventDefault();
-
-        var lat;
-        var lng;
+        $("#map-row").show();
 
         // Clearing out table each time Submit is hit
         $(".table > tbody:last").children().remove();
@@ -27,8 +26,15 @@ $(document).ready(function () {
 
             // create a new row for each brewery object returned by api + append to table
             function displayBreweryInfo(response) {
+                var cordinates = []
 
-                for (var i = 0; i < 9; i++) {
+                var displayCount = response.length;
+
+                if (displayCount > 10) {
+                    displayCount = 10;
+                }
+
+                for (var i = 0; i < displayCount; i++) {
 
                     var brewery = response[i].name;
                     var street = response[i].street;
@@ -37,10 +43,10 @@ $(document).ready(function () {
                     var address = street + ", " + state + ", " + zip;
                     var number = response[i].phone;
                     var website = response[i].website_url;
-                    lat = parseFloat(response[i].latitude);
-                    console.log('lat', lat);
-                    lng = parseFloat(response[i].longitude);
-                    console.log('lng', lng)
+                    var lat = parseFloat(response[i].latitude);
+                    // console.log('lat', lat);
+                    var lng = parseFloat(response[i].longitude);
+                    // console.log('lng', lng)
 
                     var newRow = $("<tr>").append(
                         $("<td>").text(brewery),
@@ -52,20 +58,30 @@ $(document).ready(function () {
 
                     // Append the new row to the table
                     $(".table > tbody").append(newRow);
+                    if (!isNaN(lat)) {
+
+                        cordinates.push({
+                            lat: lat,
+                            lng: lng,
+                        })
+                    } 
                 }
+                initMap(cordinates);
+                
             }
         });
-        
-        function initMap() {
-            // The location of Uluru
-            var location = { lat: -25.344, lng: 131.036 };
-            // The map, centered at Uluru
-            var map = new google.maps.Map(
-                document.getElementById('map'), { zoom: 4, center: location });
-            // The marker, positioned at Uluru
-            var marker = new google.maps.Marker({ position: location, map: map });
-        }
-        initMap();
-    });
 
+        function initMap(cordinates) {
+            console.log("initmar", cordinates);
+            var location = cordinates[0];
+            var map = new google.maps.Map(
+                document.getElementById('map'), { zoom: 12, center: location });
+
+            for (var i = 0; i < cordinates.length; i++) {
+
+                var marker = new google.maps.Marker({ position: cordinates[i], map: map });
+            }
+            console.log(cordinates);
+        }
+    });
 });
