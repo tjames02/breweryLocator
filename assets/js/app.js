@@ -51,11 +51,13 @@ $(document).ready(function () {
                     var newRow = $("<tr>").append(
                         $("<td>").text(brewery),
                         $("<td>").text(address),
-                        $("<td>").text(number),
+                        $("<td>").text(number).text(function(i, text) {
+                            text = text.replace(/(\d{3})(\d{3})(\d{4})/, "$1-$2-$3");
+                            return text;
+                        }),
                         $("<td>").html('<a href="' + website + '">' + website + '</a>'),
 
                     );
-
                     // Append the new row to the table
                     $(".table > tbody").append(newRow);
                     if (!isNaN(lat)) {
@@ -64,10 +66,10 @@ $(document).ready(function () {
                             lat: lat,
                             lng: lng,
                         })
-                    } 
+                    }
                 }
                 initMap(cordinates);
-                
+
             }
         });
 
