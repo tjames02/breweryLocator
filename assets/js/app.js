@@ -1,6 +1,10 @@
 $(document).ready(function () {
 
     $("#map-row").hide();
+    $( document ).tooltip();
+
+   
+
 
     $("button").on("click", function (e) {
         e.preventDefault();
