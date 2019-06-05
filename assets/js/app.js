@@ -1,10 +1,10 @@
 $(document).ready(function () {
 
+    // Hides the map element until user searches
     $("#map-row").hide();
+
+    // Adds helpful messages for users
     $( document ).tooltip();
-
-   
-
 
     $("button").on("click", function (e) {
         e.preventDefault();
@@ -48,9 +48,7 @@ $(document).ready(function () {
                     var number = response[i].phone;
                     var website = response[i].website_url;
                     var lat = parseFloat(response[i].latitude);
-                    // console.log('lat', lat);
                     var lng = parseFloat(response[i].longitude);
-                    // console.log('lng', lng)
 
                     var newRow = $("<tr>").append(
                         $("<td>").text(brewery),
@@ -73,10 +71,9 @@ $(document).ready(function () {
                     }
                 }
                 initMap(cordinates);
-
             }
         });
-
+        // Our google map function
         function initMap(cordinates) {
             console.log("initmar", cordinates);
             var location = cordinates[0];
@@ -87,7 +84,6 @@ $(document).ready(function () {
 
                 var marker = new google.maps.Marker({ position: cordinates[i], map: map });
             }
-            console.log(cordinates);
         }
     });
 });
